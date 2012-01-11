@@ -23,7 +23,7 @@ class OSCDecoder{
 private:
 
     
-	int16_t decode( OSCMessage::OSCMessage *_mes ,const uint8_t *_binData );
+	int16_t decode( OSCMessage *_mes ,const uint8_t *_binData );
     
 public:
     

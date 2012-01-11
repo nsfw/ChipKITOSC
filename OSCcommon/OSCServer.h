@@ -28,8 +28,8 @@ private:
 	uint8_t _rcvData[kMaxRecieveData];
 	
 
-    OSCDecoder::OSCDecoder _decoder;
-    Pattern::Pattern _adrMatch;
+    OSCDecoder _decoder;
+    Pattern _adrMatch;
 	
    
 	void rcvFlush(void);
@@ -44,9 +44,7 @@ public:
 	int16_t begin(uint16_t _recievePort);
 	void stop(void);
 	
-	
     int16_t aviableCheck(void);
-
 
     //_adr osc address string pointer - "/ard/aaa"
     //_func callback function pointer

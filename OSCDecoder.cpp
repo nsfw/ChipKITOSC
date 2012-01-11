@@ -20,7 +20,7 @@
 #include "OSCcommon/OSCArg.h"
 
 
-int16_t OSCDecoder::decode( OSCMessage::OSCMessage *_newMes , const uint8_t *_binData ){
+int16_t OSCDecoder::decode( OSCMessage *_newMes , const uint8_t *_binData ){
 	
 	
 	const uint8_t *packStartPtr = _binData;

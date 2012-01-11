@@ -20,7 +20,7 @@
 #include "OSCCommon/OSCArg.h"
 
 
-int16_t OSCEncoder::encode( OSCMessage::OSCMessage *_newMes ,uint8_t *_binData ){
+int16_t OSCEncoder::encode( OSCMessage *_newMes ,uint8_t *_binData ){
 	
 	uint8_t *packStartPtr = _binData;
     	
@@ -40,7 +40,7 @@ int16_t OSCEncoder::encode( OSCMessage::OSCMessage *_newMes ,uint8_t *_binData )
 	packStartPtr += _newMes->_typeTagAlignmentSize;
 	
 	
-//=========== Auguments -> BIN Encode   ==================
+//=========== Arguments -> BIN Encode   ==================
 	
 
 	for ( uint8_t i=0 ; i < _newMes->_argsNum ; i++ ) {

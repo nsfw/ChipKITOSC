@@ -21,7 +21,7 @@ extern "C" {
 #include <inttypes.h>
 }
 
-#define kMaxAugument	16
+#define kMaxArgument	16
 #define kMaxRecieveData	100
 #define kMaxOSCAdrCharactor	255
 
@@ -34,6 +34,7 @@ extern "C" {
 
 #define _USE_STRING_
 
+#define _USE_BLOB_
 
 //======== user define  end  ========
 

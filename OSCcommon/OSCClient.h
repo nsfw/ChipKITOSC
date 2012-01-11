@@ -33,7 +33,7 @@ private:
 
     uint8_t *_sendData;
     
-    OSCEncoder::OSCEncoder encoder;
+    OSCEncoder encoder;
 
     int16_t sockOpen(void);
 	void sockClose(void);

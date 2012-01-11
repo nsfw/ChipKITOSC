@@ -24,7 +24,7 @@ class OSCEncoder{
 	
 private:
 	
-    int16_t encode( OSCMessage::OSCMessage *mes ,uint8_t *_binData );
+    int16_t encode( OSCMessage *mes ,uint8_t *_binData );
 	
     
 public:

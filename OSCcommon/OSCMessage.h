@@ -34,9 +34,12 @@
 #define kTagFalse   'F'
 
 
-
-
-
+#ifdef _USE_BLOB_
+struct OSCBlob {
+    uint32_t		len;
+    const uint8_t	*data;			// points into raw message
+};
+#endif
 
 class OSCMessage{
 	
@@ -49,15 +52,13 @@ private:
 	uint16_t	_oscAdrSize;
 	uint16_t	_oscAdrAlignmentSize;
     
-    
 	uint16_t	_typeTagAlignmentSize;
     uint16_t	_argsAlignmentSize;
 	
 	uint16_t	_argsNum;
 
-    OSCArg *    _args[kMaxAugument];
+    OSCArg *    _args[kMaxArgument];
 
- 
     uint16_t getMessageSize(void);
     uint16_t getArgAlignmentSize(uint8_t _index);
   
@@ -104,10 +105,13 @@ public:
     int16_t addArgString(const char* _value);
     int16_t getArgString(int16_t _index, char *_rcvstr);
     int16_t getArgStringSize(int16_t _index);
-
 #endif
 
-    
+#ifdef _USE_BLOB_
+    OSCBlob *getArgBlob(uint16_t _index) {
+        return (OSCBlob *) _args[_index];
+    };
+#endif
 	
 	friend class OSCServer;
 	friend class OSCClient;
