@@ -30,7 +30,7 @@ class OSCClient{
 // private:
 public:     
     uint8_t *_sendData;
-    UDP *udp;
+    // UDP *udp;
     
     OSCEncoder encoder;
 
@@ -45,7 +45,7 @@ public:
 	~OSCClient(void);
     
     void begin( OSCServer &server ){
-        udp = server.udp;
+        // udp = server.udp;
     };
 
 	int16_t send( OSCMessage *_message);

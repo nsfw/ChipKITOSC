@@ -14,7 +14,7 @@
 
 #include <stdlib.h>
 
-#include <chipKITEthernet.h>
+// #include <chipKITEthernet.h>
 #include "OSCCommon/OSCClient.h"
 
 // #include <utility/socket.h>
@@ -22,7 +22,7 @@
 
 OSCClient::OSCClient(void){
     // _sock = MAX_SOCK_NUM;   
-    udp = 0;
+    // udp = 0;
     _sendData = 0;
 }
 
@@ -60,6 +60,7 @@ void OSCClient::sockClose(void){
 }
 
 int16_t OSCClient::send(OSCMessage *_message){
+#if 0
 	
     uint16_t result=0;
 
@@ -90,12 +91,14 @@ int16_t OSCClient::send(OSCMessage *_message){
 	// sockClose();
 
     // chipkit32 
-    if(!udp) udp = new UDP();
-    result = udp->sendPacket(_sendData , _message->getMessageSize() , _message->getIpAddress(), _message->getPortNumber() );
+    // if(!udp) udp = new UDP();
+    // result = udp->sendPacket(_sendData , _message->getMessageSize() , _message->getIpAddress(), _message->getPortNumber() );
 
     // release our send buffer
     flushSendData();
 	return result;
+#endif
+    return 0;
 }
 
 void OSCClient::flushSendData(void){

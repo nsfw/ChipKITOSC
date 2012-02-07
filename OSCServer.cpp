@@ -18,12 +18,9 @@
 #include "OSCcommon/OSCcommon.h"
 #include "OSCCommon/OSCMessage.h"
 
-// work with chipKIT Network Shield
-
-
 OSCServer::OSCServer(void){
     // _sock = MAX_SOCK_NUM;
-    udp = 0;
+    // udp = 0;
     decodeErrorCount=0;
 }
 
@@ -47,9 +44,9 @@ int16_t OSCServer::begin(uint16_t _recievePort){
     // if (_sock == MAX_SOCK_NUM) return -1;
 	// rcvFlush();
     
-    if(!udp) udp = new UDP();
+    // if(!udp) udp = new UDP();
     _port=_recievePort;
-    udp->begin(_port);
+    // udp->begin(_port);
 
     return 1;
 }
@@ -60,10 +57,11 @@ void OSCServer::stop(void){
     // if (_sock == MAX_SOCK_NUM) return;
     // close(_sock);
     // _sock = MAX_SOCK_NUM;
-    if(udp) udp->stop();
+    // if(udp) udp->stop();
 }
 
 int16_t OSCServer::availableCheck(void){
+#if 0
 
 	// if( !( W5100.readSnIR(_sock) && SnIR::RECV ) ) return -1;
     // if( W5100.getRXReceivedSize(_sock) == 0 ) return -1;
@@ -91,6 +89,7 @@ int16_t OSCServer::availableCheck(void){
     _adrMatch.paternComp(&rcvMes);
 
 	return 1;
+#endif
 }
 
 

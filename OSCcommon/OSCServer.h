@@ -15,8 +15,6 @@
 #ifndef ArdOSC_OSCServer2_h
 #define ArdOSC_OSCServer2_h
 
-#include <chipKITEthernet.h>
-
 #include "OSCDecoder.h"
 #include "Pattern.h"
 
@@ -26,7 +24,7 @@ public:
 // private:
 //     int16_t _sock;
 
-    UDP *udp;
+    // UDP *udp;
 
     OSCDecoder _decoder;
     Pattern _adrMatch;
