@@ -12,8 +12,6 @@
  
  */
 
-
-
 #ifndef OSCcommon_h
 #define OSCcommon_h
 
@@ -21,19 +19,16 @@ extern "C" {
 #include <inttypes.h>
 }
 
-#define kMaxArgument	16
-#define kMaxRecieveData	100
-#define kMaxOSCAdrCharactor	255
-
-#define CULC_ALIGNMENT(x) (x+4)&0xfffc
-
+// 0=0, 1=4, 2=4, 3=4, 4=4
+#define WORD_ALIGNMENT(x) (x+3)&0xfffc
 
 //======== user define ==============
+#define kMaxArgument	16
+#define kMaxRecieveData	2048	// more than a full ethernet mtu
+#define kMaxOSCAdrCharactor	255
 
 #define _USE_FLOAT_
-
 #define _USE_STRING_
-
 #define _USE_BLOB_
 
 //======== user define  end  ========

@@ -8,13 +8,9 @@
  2009/03/22 version 1.0.1 add errror process。change Doc.
  2009/03/21 version 1.0.0
  
- 
- -------- Lisence -----------------------------------------------------------
- 
+ -------- Licence -----------------------------------------------------------
  ArdOSC
- 
  The MIT License
- 
  Copyright (c) 2009 - 2010 recotana( http://recotana.com )　All right reserved
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,26 +31,15 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  
- 
- 
  Thanks "Open Sound Control org"  http://opensoundcontrol.org/
- 
  */		
 
-#ifndef ArdOSC_h
-#define ArdOSC_h
-
-
-
-
+#ifndef chipKITOSC_h
+#define chipKITOSC_h
 
 #include "OSCCommon/OSCcommon.h"
 #include "OSCCommon/OSCMessage.h"
-
-
 #include "OSCCommon/OSCClient.h"
 #include "OSCCommon/OSCServer.h"
-
-
 
 #endif

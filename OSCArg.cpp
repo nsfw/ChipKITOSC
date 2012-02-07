@@ -12,10 +12,10 @@
  
  */
 
-#include "OSCcommon/OSCArg.h"
-#include "OSCCommon/OSCMessage.h"
 #include <stdlib.h>
 #include <string.h>
+#include "OSCcommon/OSCArg.h"
+#include "OSCCommon/OSCMessage.h"
 
 OSCArg::OSCArg(void){
     _typeTag = 0;
@@ -31,36 +31,49 @@ OSCArg::OSCArg(char _tag){
     _alignmentSize = 0;
 }
 
+// sfw - debug
+#include "Wprogram.h"
+#define DUMPVAR(s,v) Serial.print(s); Serial.println(v);
+#define DUMPPTR(s,v) Serial.print(s); Serial.println((unsigned int)v,HEX);
 
-OSCArg::OSCArg( char _tag , void *_data , uint16_t _size , bool _packSizeCulc ) {
+void OSCArg::init( char _tag , void *_data , uint16_t _size , bool _packSizeCulc ) {
+    _argData = 0;
+    _alignmentSize = 0;
     
     _typeTag = _tag;
+    _dataSize = _size;
     
-    if( _typeTag == kTagBlob )  _typeTag = _size+4;
-    else    _dataSize = _size;
-    
-    if( _packSizeCulc )   _alignmentSize = CULC_ALIGNMENT(_size);
+    if( _typeTag == kTagBlob )  _dataSize = _size+4;	// include size argument
+    else _dataSize = _size;
+
+    // DUMPVAR("arg._typeTag=",_typeTag);
+    // DUMPVAR("arg._dataSize=",_dataSize);
+
+	// Note: we could just check if _size%4 == 0... but whatever
+    if( _packSizeCulc ) _alignmentSize = WORD_ALIGNMENT(_size);
     else                _alignmentSize = _size;
     
     if( _size == 0 ) return;
     
-    _argData = calloc( 1, _alignmentSize );
-
-    memcpy( (uint8_t*)_argData , _data , _size );
-
-    
+    // allocate null space based on alignment
+    _argData = calloc( 1, _alignmentSize );		// free in OSCArg::flush() (called by ~OSCArg)
+    // DUMPPTR("alloc _argData=",_argData);
+    // DUMPPTR("alloc _alignmentSize=",_alignmentSize);
+    if(_argData){	// allocated
+        // and copy our data into it
+        memcpy( (uint8_t*)_argData , _data , _size );
+    }
 }
 
 OSCArg::~OSCArg(void){
-    
-    if( _typeTag != 0 ) flush();
-
+    flush();
 }
 
 void OSCArg::flush(void){
-    
-    if( _dataSize > 0 ) free(_argData);
-
+    if( _argData ){
+        // DUMPPTR("free arg =",_argData);
+        free(_argData);
+    }
     _dataSize = 0;
     _alignmentSize = 0;
     _typeTag = 0;

@@ -18,6 +18,9 @@
 #include "OSCcommon/OSCcommon.h"
 #include "OSCCommon/OSCMessage.h"
 
+#include "Wprogram.h"
+#define DUMPVAR(s,v) Serial.print(s); Serial.println(v);
+#define DUMPPTR(s,v) Serial.print( s); Serial.println((unsigned int)v,HEX);
 
 OSCMessage::OSCMessage(void)
 {	
@@ -40,30 +43,33 @@ OSCMessage::OSCMessage(const char *_oscAddr)
 
 OSCMessage::~OSCMessage(void)
 {
-	flush();
+	flush();	// release any associated storage
 }
 
 
 void OSCMessage::flush(void){
-	
-    if ( _oscAdrSize == 0 ) return;
-    
-    free(_oscAddress);
+	// Reset counters and free any associated storage
+
+    if (_oscAdrSize) free(_oscAddress);
+
     _oscAddress = NULL;
     _oscAdrSize = 0;
 	_oscAdrAlignmentSize = 0;
 
-    OSCArg *tmp;
+    _typeTagAlignmentSize = WORD_ALIGNMENT(2);	// at least 4 bytes
 
     for ( uint8_t i = 0 ; i<_argsNum ; i++ ){
-        tmp = _args[i];
-        delete tmp;
+        if(_args[i]){
+            delete _args[i];
+            // note: 	// can't use new and delete w/ new libc
+            // ((OSCArg*)_args[i])->~OSCArg();	// explicity call destructor
+            // free(_args[i]);					// and free memory
+        } else
+            Serial.println("~OSCMessage:: null OSCArg*");
     }
     
 	_argsNum = 0;
 	_argsAlignmentSize = 0;	
-	_port = 0;
-
 }
 
 void OSCMessage::setAddress(uint8_t *_ipAddr , uint16_t _portNum){	
@@ -94,6 +100,7 @@ uint16_t OSCMessage::getPortNumber(){
 int16_t OSCMessage::setOSCAddress(const char *_address){
 
 	_oscAdrSize = (uint16_t)strlen(_address);
+	_oscAdrAlignmentSize = WORD_ALIGNMENT(_oscAdrSize+1);	// w/ space for terminal /0
 	
 	if( _oscAdrSize > kMaxOSCAdrCharactor ){
 		flush();
@@ -105,10 +112,7 @@ int16_t OSCMessage::setOSCAddress(const char *_address){
 	_oscAddress = (char*)calloc(1,_oscAdrSize+1);
 	strcpy( _oscAddress , _address) ;
 	
-	_oscAdrAlignmentSize = CULC_ALIGNMENT(_oscAdrSize);
-    
 	return 1;
-    
 }
 
 
@@ -138,33 +142,42 @@ char    OSCMessage::getArgTypeTag(int16_t _index)   {
 
 
 void OSCMessage::swap(uint8_t *data1, uint8_t *data2){
+    // OSC is BIG ENDIAN both AVR and PIC32 are LITTLE ENDIAN
     data1[0] = data2[3];
     data1[1] = data2[2];
     data1[2] = data2[1];
     data1[3] = data2[0];
 }
 
-
-
-
-
-
 int16_t OSCMessage::beginMessage(const char *_address){
-    flush();
-    return setOSCAddress(_address);
+    flush();						// clear out structure - release storage
+    return setOSCAddress(_address);	// e.g. "/foo"
 }
 
-int16_t OSCMessage::setArgData(char _type , void *_value , uint8_t _byte,bool _enableAlignment){
+int16_t OSCMessage::setArgData(char _type , void *_value , uint16_t _size, bool _enableAlignment){
+    // copies data to new memory, with appropriate alignment
+    // DUMPVAR("_argsNum=",_argsNum);
+    // void *p = malloc(20);
+    // if(p){
+    //     free(p);
+    // } else {
+    //     Serial.println("NO MEMORY!!");
+    // }
+
+    _args[_argsNum]= new OSCArg( _type , _value , _size , _enableAlignment );
+
+    // note: can't use new with newlibc on chipkit
+    // _args[_argsNum] = (OSCArg *) calloc(1, sizeof(OSCArg));
+    // _args[_argsNum]->init(_type , _value , _size , _enableAlignment );
     
-    _args[_argsNum]= new OSCArg( _type , _value , _byte , _enableAlignment );
-    
+    // running total of message size
     uint16_t alignSize = _args[_argsNum]->_alignmentSize;
-    
     _argsAlignmentSize += alignSize;
-    
+
+    // and argument count
     _argsNum++;
     
-    _typeTagAlignmentSize = CULC_ALIGNMENT( _argsNum + 1 );
+    _typeTagAlignmentSize = WORD_ALIGNMENT( _argsNum + 2 );	// leading ',' and terminal /0
     
     return alignSize;
 }
@@ -174,10 +187,11 @@ int16_t OSCMessage::addArgInt32(int32_t _value){
     if( _argsNum > kMaxArgument ) return -1;
     
     uint8_t tmpValue[4];
-    uint8_t *data = (uint8_t*)&_value;
-    swap( tmpValue , data );
 
-    setArgData( kTagInt32 , tmpValue , 4 , false );
+    uint8_t *data = (uint8_t*)&_value;
+    swap( tmpValue , data );		// AVR and PIC32 are both little endian
+
+    setArgData( kTagInt32 , tmpValue , 4 , false );	
     
     return 1;
 }
@@ -185,13 +199,12 @@ int16_t OSCMessage::addArgInt32(int32_t _value){
 int32_t OSCMessage::getArgInt32(int16_t _index){
     
     if ( _index > _argsNum ) return -1;
-    
      
-    uint8_t tmpValue[4];
+    uint32_t tmpValue;		// enforce word aligment
     uint8_t *_bin = (uint8_t*)_args[_index]->_argData;
-    swap( tmpValue , _bin );
+    swap( (uint8_t *) &tmpValue , _bin );
     
-    return *(int32_t*)tmpValue;
+    return tmpValue;
 }
 
 
@@ -232,7 +245,8 @@ int16_t OSCMessage::addArgString(const char* _value){
     
     if (_argsNum > kMaxArgument ) return -1;
     
-    setArgData( kTagString , (void*)_value , strlen(_value) , true );
+    // remember we need storage for null terminator
+    setArgData( kTagString , (void*)_value , strlen(_value)+1 , true );
         
     return 1;
 }

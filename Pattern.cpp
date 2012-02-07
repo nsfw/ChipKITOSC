@@ -40,9 +40,8 @@ void Pattern::execFunc(uint8_t _index,OSCMessage *_mes){
 }
 
 void Pattern::paternComp(OSCMessage *_mes){
-    
+    // pattern of "*" matches ALL incoming addresses
     for (uint8_t i=0 ; i<patternNum ; i++) {
-        if ( strcmp( addr[i] , _mes->_oscAddress ) == 0 ) execFunc( i , _mes );
-
+        if ( strcmp( addr[i] , _mes->_oscAddress ) == 0 || (*addr[i] == '*') ) execFunc( i , _mes );
     }
 }

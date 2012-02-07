@@ -11,13 +11,8 @@
  Copyright (c) 2009 - 2011 recotana( http://recotana.com )　All right reserved
  
  */
-
-
-
-
 #ifndef OSCMessage_h
 #define OSCMessage_h
-
 
 #include "OSCcommon.h"
 #include "OSCArg.h"
@@ -33,17 +28,11 @@
 #define kTagTrue    'T'
 #define kTagFalse   'F'
 
-
-#ifdef _USE_BLOB_
-struct OSCBlob {
-    uint32_t		len;
-    const uint8_t	*data;			// points into raw message
-};
-#endif
-
 class OSCMessage{
 	
-private:
+// private:
+// sfw - debug
+public:
     
 	uint8_t		_ip[4];	
 	uint16_t	_port;
@@ -62,7 +51,7 @@ private:
     uint16_t getMessageSize(void);
     uint16_t getArgAlignmentSize(uint8_t _index);
   
-    int16_t setArgData( char _type , void *_value , uint8_t _byte,  bool _enableAlignment );
+    int16_t setArgData( char _type , void *_value , uint16_t _size,  bool _enableAlignment );
     void swap(uint8_t *data1, uint8_t *data2);
 //    void get4ByteData(int16_t _index , uint8_t *_data);
 
@@ -107,11 +96,10 @@ public:
     int16_t getArgStringSize(int16_t _index);
 #endif
 
-#ifdef _USE_BLOB_
-    OSCBlob *getArgBlob(uint16_t _index) {
-        return (OSCBlob *) _args[_index];
+    // useful for blob
+    OSCArg * getArg(uint16_t _index){
+        return _args[_index];
     };
-#endif
 	
 	friend class OSCServer;
 	friend class OSCClient;

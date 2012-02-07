@@ -1,0 +1,39 @@
+void setup()
+{
+  Serial.begin(115200);
+}
+
+#define ALLOCS 200
+#define ALLOCSIZE 0x02
+
+void loop()
+{
+  int scnt = 0;
+  int fcnt = 0;
+  
+  for (int i = 0; i < ALLOCS; i++)
+  {
+    byte* pb = (byte*)malloc(ALLOCSIZE);
+    if (pb == NULL)
+    {
+      Serial.println("Failed");
+      fcnt++;
+    }
+    else
+    {
+      Serial.println("Success");
+      scnt++;
+    }
+  }
+  
+  Serial.print("Successfully allocated ");
+  Serial.print(scnt, DEC);
+  Serial.print(" times. Total memory allocated ");
+  Serial.print(scnt * ALLOCSIZE);
+  Serial.println(" bytes.");
+  
+  Serial.print(fcnt, DEC);
+  Serial.println(" Failures");
+  
+  delay(1000000);
+}

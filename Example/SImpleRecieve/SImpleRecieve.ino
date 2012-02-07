@@ -28,7 +28,7 @@ void setup(){
 }
   
 void loop(){
-  if(server.aviableCheck()>0){
+  if(server.availableCheck()>0){
  //    Serial.println("alive! "); 
   }
   

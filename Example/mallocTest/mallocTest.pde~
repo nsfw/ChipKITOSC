@@ -1,0 +1,25 @@
+
+void testAlloc(unsigned int sz){
+    void *ptr = malloc(sz);
+    Serial.print("alloc: ");
+    Serial.println(sz);
+    Serial.print(" @ ");
+    Serial.println((unsigned int) ptr, HEX);
+    free(ptr);
+}
+
+
+void setup(){ 
+    Serial.begin(57600);
+    Serial.println("Hello!!");
+}
+  
+void loop(){
+    static int p = 0x10;
+    testAlloc();
+    p+=15;
+    delay(1000);
+    Serial.print(".");
+}
+
+

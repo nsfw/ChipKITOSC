@@ -19,6 +19,7 @@
 #include "OSCcommon.h"
 #include "OSCMessage.h"
 #include "OSCEncoder.h"
+#include "OSCServer.h"
 
 #define kDummyPortNumber 10000
 
@@ -26,26 +27,26 @@
 
 class OSCClient{
 	
-private:
-        
-	uint8_t _sock;
-	
-
+// private:
+public:     
     uint8_t *_sendData;
+    UDP *udp;
     
     OSCEncoder encoder;
 
+	void flushSendData(void);
+
     int16_t sockOpen(void);
 	void sockClose(void);
-	
-	void flushSendData(void);
-    
     
 public:
     
 	OSCClient(void);
 	~OSCClient(void);
     
+    void begin( OSCServer &server ){
+        udp = server.udp;
+    };
 
 	int16_t send( OSCMessage *_message);
     

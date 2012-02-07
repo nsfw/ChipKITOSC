@@ -15,27 +15,27 @@
 #ifndef ArdOSC_OSCServer2_h
 #define ArdOSC_OSCServer2_h
 
+#include <chipKITEthernet.h>
 
 #include "OSCDecoder.h"
 #include "Pattern.h"
 
 class OSCServer{
     
-private:
-    int16_t _sock;
-    uint16_t _port;
-    
-	uint8_t _rcvData[kMaxRecieveData];
-	
+public:
+// private:
+//     int16_t _sock;
+
+    UDP *udp;
 
     OSCDecoder _decoder;
     Pattern _adrMatch;
+	uint8_t _rcvData[kMaxRecieveData];
+
+    uint16_t _port;
+    uint16_t decodeErrorCount;
 	
-   
-	void rcvFlush(void);
-    
-    
-    
+	void rcvFlush(void);		// empty receive queue
 public:
     
     OSCServer(void);
@@ -44,7 +44,7 @@ public:
 	int16_t begin(uint16_t _recievePort);
 	void stop(void);
 	
-    int16_t aviableCheck(void);
+    int16_t availableCheck(void);
 
     //_adr osc address string pointer - "/ard/aaa"
     //_func callback function pointer

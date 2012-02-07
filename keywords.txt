@@ -20,7 +20,7 @@ send	KEYWORD2
 
 begin	KEYWORD2
 stop	KEYWORD2
-aviableCheck	KEYWORD2
+availableCheck	KEYWORD2
 addCallback	KEYWORD2
 
 flush	KEYWORD2

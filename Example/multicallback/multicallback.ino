@@ -31,7 +31,7 @@ void setup(){
   
 void loop(){
   
-  int result = server.aviableCheck();
+  int result = server.availableCheck();
   
   if(result>0){
     //callback after process

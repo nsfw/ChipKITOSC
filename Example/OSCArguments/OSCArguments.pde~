@@ -1,0 +1,167 @@
+// notes for newlibc
+// ~/Documents/chipKIT/libraries/chipKITEthernet/utility/TCPIP Stack/Helpers.h
+// #define _C32_ULTOA 1
+//
+// in WCharacter.h: isblank(int c) definition conflicts w/ ctype.h
+//
+
+#include "exceptions.h"
+#include <SPI.h>
+// #include <Ethernet.h>
+#include <chipKITEthernet.h>
+
+#include <ArdOSC.h>
+
+// byte myMac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+byte myMac[] = { 0, 0, 0, 0, 0, 0 };	// let ethernet library assign something
+byte myIp[]  = { 139, 104, 88, 199 };
+
+byte targetIp[]  = { 139, 104, 88, 42 };
+
+int  serverPort  = 9999;
+
+int destPort=9999;
+
+char oscadr[]="/test";
+
+OSCServer server;
+OSCClient client;
+
+char blockingReadChar(){
+    while(!Serial.available());	// wait for it
+    return Serial.read();
+}
+
+void setup(){ 
+  
+    Serial.begin(57600);
+    Serial.println("Hello!");
+
+    Ethernet.begin(myMac ,myIp); 
+
+    server.begin(serverPort);
+    client.begin(server);
+
+    //set callback function
+    server.addCallback(oscadr,&func1);
+}
+  
+void loop(){
+    TRY {
+        Ethernet.PeriodicTasks();
+        if(server.availableCheck()>0){
+            Serial.println("alive! "); 
+        }
+        makeMsg();	// and send
+        delay(100);
+    } CATCH {
+      Serial.println("## EXCEPTION ############################################");
+      if (_excep_code == EXCEP_Trap) {
+          Serial.print("Trap exception: ");
+      } else if (_excep_code == EXCEP_DBE) {
+          Serial.print("Bus error (load/store) exception: ");
+      } else {
+          Serial.print("Unknown exception: ");
+      }
+      Serial.print(_excep_code);
+      Serial.println();
+      Serial.println("#######################################################");
+    }
+}
+
+// /test + nothing = /test\0\0\0,\0\0\0\0 = 12 
+
+int cnt = 0;
+void makeMsg(){
+  //create new osc message
+  OSCMessage newMes;
+  
+  //set destination ip address & port no
+  newMes.setAddress(targetIp,destPort);
+  
+  //set argument
+  newMes.beginMessage(oscadr);
+  newMes.addArgInt32(cnt);
+  newMes.addArgFloat(0.1*cnt);
+  newMes.addArgString("HLEOEOEOEO!");
+
+  // Serial.print("s");
+  // Serial.print("addrlen: "); Serial.println(newMes._oscAdrAlignmentSize);
+  // Serial.print("typelen: "); Serial.println(newMes._typeTagAlignmentSize);
+
+  //send osc message
+  client.send(&newMes);
+  // Serial.println("!");
+  cnt++;
+
+  // chipkit32 will fault on free(0)
+  // if(cnt == 10){
+  //     Serial.println("BANG?");
+  //     free((void*) 0);
+  // }
+}
+
+void func1(OSCMessage *_mes){
+  
+    logIp(_mes);
+    logOscAddress(_mes);
+  
+    //get source ip address
+    byte *sourceIp = _mes->getIpAddress();
+    unsigned int srcPort = _mes->getPortNumber();
+
+    //get 1st argument(int32)
+    int tmpI=_mes->getArgInt32(0);
+  
+    //get 2nd argument(float)
+    float tmpF=_mes->getArgFloat(1);
+  
+    //get 3rd argument(string)
+    int strSize=_mes->getArgStringSize(2);
+
+    char tmpStr[strSize]; //string memory allocation
+    _mes->getArgString(2,tmpStr); 
+
+    Serial.print(tmpI); Serial.print(" ");
+    Serial.print(tmpF); Serial.print(" ");
+    Serial.print(tmpStr); Serial.print(" ");
+    Serial.println("");
+
+    //create new osc message
+    OSCMessage newMes;
+  
+    //set destination ip address & port no
+    newMes.setAddress(sourceIp,srcPort);
+  
+    //set argument
+    newMes.beginMessage(oscadr);
+    newMes.addArgInt32(tmpI+1);
+    newMes.addArgFloat(tmpF+0.1);
+    newMes.addArgString(tmpStr);
+ 
+    //send osc message
+    client.send(&newMes);
+}
+
+void logIp(OSCMessage *_mes){
+  byte *ip = _mes->getIpAddress();
+  Serial.print("IP:");
+  Serial.print(ip[0],DEC);
+  Serial.print(".");
+  Serial.print(ip[1],DEC);
+  Serial.print(".");
+  Serial.print(ip[2],DEC);
+  Serial.print(".");
+  Serial.print(ip[3],DEC);
+  Serial.print(" ");
+
+  Serial.print("Port: ");
+  Serial.print(_mes->getPortNumber(),DEC);
+  Serial.print(" ");
+
+}
+
+void logOscAddress(OSCMessage *_mes){
+  Serial.println(_mes->getOSCAddress());
+} 
+
