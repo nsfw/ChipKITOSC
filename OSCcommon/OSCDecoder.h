@@ -18,11 +18,8 @@
 #include "OSCMessage.h"
 
 class OSCDecoder{
-	
 public:
-	int16_t decode( OSCMessage *_mes ,const uint8_t *_binData );
-
-    friend class OSCServer;
+	static int16_t decode( OSCMessage *_mes ,const uint8_t *_binData );
 };
 
 #endif

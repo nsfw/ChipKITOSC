@@ -1,20 +1,13 @@
 /*
- 
  ArdOSC 2.1 - OSC Library for Arduino.
- 
- -------- Lisence -----------------------------------------------------------
- 
+ -------- License -----------------------------------------------------------
  ArdOSC
- 
  The MIT License
- 
  Copyright (c) 2009 - 2011 recotana( http://recotana.com )　All right reserved
- 
  */
 
 #include <stdlib.h>
 #include <string.h>
-#include "OSCcommon/OSCServer.h"
 #include "OSCcommon/OSCcommon.h"
 #include "OSCCommon/OSCMessage.h"
 

@@ -1,15 +1,5 @@
 /*
- 
- ArdOSC 2.1 - OSC Library for Arduino.
- 
- -------- Lisence -----------------------------------------------------------
- 
- ArdOSC
- 
- The MIT License
- 
- Copyright (c) 2009 - 2011 recotana( http://recotana.com )　All right reserved
- 
+ chipKITOSC - based on ArdOSC 2.1
  */
 
 #ifndef OSCcommon_h
@@ -30,10 +20,6 @@ extern "C" {
 #define _USE_FLOAT_
 #define _USE_STRING_
 #define _USE_BLOB_
-
 //======== user define  end  ========
-
-
-
 
 #endif

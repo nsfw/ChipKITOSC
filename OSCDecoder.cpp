@@ -19,11 +19,11 @@
 #include "OSCcommon/OSCDecoder.h"
 #include "OSCcommon/OSCArg.h"
 
+// #include <Wprogram.h>	// sfw
 
-#include <Wprogram.h>	// sfw
+#if 0
 #define DUMPVAR(s,v) Serial.print(s); Serial.println((unsigned int) v);
 #define DUMPPTR(s,v) Serial.print( s); Serial.println((unsigned int)v,HEX);
-
 void dumphex(byte *buffer,int size){
     Serial.println("dump: ");
     for(byte i = 0; i < size; i++){
@@ -33,6 +33,7 @@ void dumphex(byte *buffer,int size){
         Serial.println((char) buffer[i]);
     }
 }
+#endif
 
 int16_t OSCDecoder::decode( OSCMessage *_newMes , const uint8_t *_binData ){
 	
@@ -72,7 +73,7 @@ int16_t OSCDecoder::decode( OSCMessage *_newMes , const uint8_t *_binData ){
         case kTagString:
         {
             uint16_t l = strlen((char *)packetPtr);
-            DUMPVAR("strlen=", l);
+            // DUMPVAR("strlen=", l);
             packetPtr += _newMes->setArgData( kTagString , (void*)packetPtr , l , true );
             break;
         }   

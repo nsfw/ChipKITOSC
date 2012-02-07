@@ -1,13 +1,9 @@
 /*
+ chipKITOSC - OSC for chipKIT32 and DNETcK
  
- ArdOSC - OSC Library for Arduino.
- 
- This library works with arduino firmware0018.
- 
- 2010/02/01 version 2.0 changed Project OSCClass -> ArdOSC
- 2009/03/22 version 1.0.1 add errror process。change Doc.
- 2009/03/21 version 1.0.0
- 
+ Customizations in OSCCommon/OSCCommon.h
+
+ Based on v2.0 ArdOSC
  -------- Licence -----------------------------------------------------------
  ArdOSC
  The MIT License
@@ -39,7 +35,6 @@
 
 #include "OSCCommon/OSCcommon.h"
 #include "OSCCommon/OSCMessage.h"
-#include "OSCCommon/OSCClient.h"
-#include "OSCCommon/OSCServer.h"
-
+#include "OSCCommon/OSCDecoder.h"
+#include "OSCCommon/OSCEncoder.h"
 #endif

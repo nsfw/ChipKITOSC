@@ -30,8 +30,6 @@
 
 class OSCMessage{
 	
-// private:
-// sfw - debug
 public:
     
 	uint8_t		_ip[4];	
@@ -62,7 +60,6 @@ public:
     
 	~OSCMessage(void);
     
-
 	void flush(void);
 	
 	void setAddress(uint8_t *_ip , uint16_t _port);
@@ -75,7 +72,6 @@ public:
 	
 	int16_t setOSCAddress(const char *_addr);
 	char *  getOSCAddress(void);
-
 
     int16_t beginMessage( const char *_addr);
 
@@ -101,13 +97,9 @@ public:
         return _args[_index];
     };
 	
-	friend class OSCServer;
-	friend class OSCClient;
 	friend class OSCDecoder;
 	friend class OSCEncoder;
     friend class Pattern;
-
-	
 };
 
 
