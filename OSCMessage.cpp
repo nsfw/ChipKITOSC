@@ -156,20 +156,10 @@ int16_t OSCMessage::beginMessage(const char *_address){
 
 int16_t OSCMessage::setArgData(char _type , void *_value , uint16_t _size, bool _enableAlignment){
     // copies data to new memory, with appropriate alignment
-    // DUMPVAR("_argsNum=",_argsNum);
-    // void *p = malloc(20);
-    // if(p){
-    //     free(p);
-    // } else {
-    //     Serial.println("NO MEMORY!!");
     // }
 
     _args[_argsNum]= new OSCArg( _type , _value , _size , _enableAlignment );
 
-    // note: can't use new with newlibc on chipkit
-    // _args[_argsNum] = (OSCArg *) calloc(1, sizeof(OSCArg));
-    // _args[_argsNum]->init(_type , _value , _size , _enableAlignment );
-    
     // running total of message size
     uint16_t alignSize = _args[_argsNum]->_alignmentSize;
     _argsAlignmentSize += alignSize;
