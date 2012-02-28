@@ -6,6 +6,13 @@ Based on:  ArdOSC 2.1  - OSC Library for Arduino.
 07FEB12 - switched to DNETcK for stability in high bandwidth
 
 === Overview ===
+
+The current version of this library REMOVES the network details an
+focuses just the message formatting / encoding / decoding details.
+
+In this way it's platform independent... aka bring your own UDP layer.
+
+HEAP:
 This library most definately NEEDS HEAP allocated to it to run, by
 default their is little or no heap allocated. You can allocate heap by
 finding the "pic32.compiler.c.elf.flags" entry in the "platforms.txt"
@@ -13,15 +20,11 @@ and changing it to look like the following:
 
 pic32.compiler.c.elf.flags=-Os::-Wl,--gc-sections,--defsym,_min_heap_size=8192::-mdebugger
 
-This library has been reduced to the OSC specific elements support the encoding and decoding
-OSC messages. The communication of components have been extracted (for now?) and should happen
-in your sketch for now.
-
 === Installation ===
 Is the same as for Arduino Libraries, just copy the chipKITOSC folder into ..
 
 Mac
-~/Documents/Mpide/libraries/
+~/Documents/ChipKIT/libraries/
 
 Win
-MyDocuments\Mpide\libraries\
+MyDocuments\ChipKIT\libraries\
